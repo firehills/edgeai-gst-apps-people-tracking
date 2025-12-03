@@ -439,10 +439,14 @@ class PostProcessTracking(PostProcess):
 
         db = self.dashBoard.update_dashboard(img)
 
-        img = self.pathd.draw(img, tracked_objects)
-        self.timeCount.draw_time(img, text_size = 1.5, text_thickness = 3)
+        # copy the image
+        img2 = np.array(img)
+        img2 = self.pathd.draw(img2, tracked_objects)
+        img2.setflags(write=1)
 
-        return self.dashBoard.add_dashboard(img)
+        self.timeCount.draw_time(img2, text_size = 1.5, text_thickness = 3)
+
+        return self.dashBoard.add_dashboard(img2)
     
     def yolo_detections_to_norfair_detections(self, results_bbox) -> List[Detection]:
         """convert detections_as_xywh to norfair detections"""
